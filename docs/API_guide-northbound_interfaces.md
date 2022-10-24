@@ -160,7 +160,7 @@ Input:
 | :--- | :--- | :--- | :--- |
 | systemId | body | string | ID of upper layer management system |
 | neid | body | string | ID of target NF that upper layer management system wants to subscribe |
-| datatype | body | string | Types of data upper layer management syste, want to subscribe. The type can be "alarm" for alarm, "perf" for performance. To subscribe multiple types of data, using commas to seperate. |
+| datatype | body | string | Types of data upper layer management system want to subscribe. The type can be "alarm" for alarm, "perf" for performance. To subscribe multiple types of data, using commas to seperate. |
 | callbackurl | body | string | URL for cloud native OAM to send target data to |
 
 *Request Example*
@@ -202,7 +202,7 @@ Input:
 }
 ```
 
-### *Query subscription data types of target upper layer manegement systemF*
+### *Query subscription data types of target upper layer manegement system*
 * `GET` &nbsp;&nbsp;&nbsp;&nbsp; *system/jobs/business*
 
 Get NF's subscription info of NF alarms and performance.
@@ -246,7 +246,7 @@ Input:
 |Name  |In |Type  |Description  |
 | :--- | :--- | :--- | :--- |
 | neType | body | string | Type of target NF that upper layer management system wants to manage, e.g. UPF, AMF. |
-| neid | body | string | ID of target NF that upper layer management system wants to manage|
+| neid | body | string | ID of target NF that upper layer management system wants to manage.|
 | systemId | body | string | ID of upper layer management system which want to manage the NF. |
 
 <u>Request Example</u>
@@ -275,10 +275,10 @@ Error Response Code: 401, 503
 Input:
 |Name  |In |Type  |Description  |
 | :--- | :--- | :--- | :--- |
-| neType | body | string | Type of target NF that upper layer management system wants to un-manage, e.g. UPF, AMF. |
-| neid | body | string | ID of target NF that upper layer management system wants to un-manage|
-| isClear| body| int | whether or not clear NF data in cloud native OAM when unmanaging the NF. "0" represents not clear the data. "1" represents clear the data. |
-| systemId | body | string | ID of upper layer management system which want to un-manage the NF. |
+| neType | body | string | Type of target NF that upper layer management system wants to unmanage, e.g. UPF, AMF. |
+| neid | body | string | ID of target NF that upper layer management system wants to unmanage.|
+| isClear| body| int | whether or not to clear NF data in cloud native OAM when unmanaging the NF. "0" represents not clear the data. "1" represents clear the data. |
+| systemId | body | string | ID of upper layer management system which want to unmanage the NF. |
 
 <u>Request Example</u>
 ```
@@ -299,7 +299,7 @@ Json：
 ### *Upper layer management system get information of managed NFs*
 * `GET` &nbsp;&nbsp;&nbsp;&nbsp; */getVnfList*
 
-Used by upper layer management systems to get list of VNFs which are registered to cloud native OAM.
+Used by upper layer management systems to get list of CNFs which are registered to cloud native OAM.
 
 Input:
 |Name  |In |Type  |Description  | Note|
@@ -482,7 +482,7 @@ There exist three-layer relationship within NF, which is NF (the NF layer), nf-s
 ### *Upper layer management system get configurations of managed NFs*
 * `GET`  &nbsp;&nbsp;&nbsp;&nbsp;  */ne/config*
 
-Used by upper layer management systems to get basic configuration info of NFs.
+Used by upper layer management systems to get the latest five historical configuration information of NFs.
 
 Input:
 |Name  |In |Type  |Description  | Note|
@@ -499,7 +499,7 @@ Input:
      "file": [{
          "ne_id": "Your NF ID",
          "ne_type ": "Your NF type"，
-         "cf_version": "version number of your NF's in-use configuration"，
+         "cf_version": "version number of your NF's configuration"，
          "cf_path": "Path of NF's configuration file"，
          "cf_name": "Name of NF's configuration file"，
          "cf_size": "Size of NF's configuration file"，

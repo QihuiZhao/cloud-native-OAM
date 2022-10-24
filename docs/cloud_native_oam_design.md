@@ -42,48 +42,48 @@ Cloud native OAM interacts with NFs on southbound and upper layer management sys
 
 NF register function is used by NF to register itself to cloud native OAM. After successful registration, NF register function will notify upper layer management system about the registration event.
 
-By register, the following NF data are provided by NF and collected by NF register function: vnf_instance_id, vnf_name, vnf_type, vnf_manage_ip, vnf_manage_port. Besides NF register function will generate a record in database for this new NF.
+By register, the following NF data are provided by NF and collected by NF register function: ne_id, ne_type, vnf_name, vnf_manage_ip, vnf_manage_port. Besides NF register function will generate a record in database for this new NF.
 
 The layering logical functional description for NF register function is in the following table.
 
 |Logical layer	|Functional description|
 |:-------- |:-----|
 |Data sharing layer	|	Monitors new NF records. <br> Provide northbound interface for upper layer management systems to subscribe NF register notification.|
-|Processing layer	|	Process NF data and update database.|
+|Processing layer	|	Process NF data and store/update NF info in database.|
 |Agent layer |	Provide unified southbound interface for NF to register to cloud native OAM. <br> Collect NF data and send to processing layer.|
 
 ### Network function management
-NF management function is used by upper layer management systems to actually manage or un-manage a NF registered to cloud native OAM. This will actually gives upper layer management system the authorization to operate on a NF. It supports NF data query, NF microservice topology query, NF manage and NF un-manage. 
+NF management function is used by upper layer management systems to actually manage or un-manage a NF registered to cloud native OAM. This will actually build connection between upper layer management system and NF, and give upper layer management system the authorization to operate on a NF. It supports NF data query, NF microservice topology query, NF manage and NF un-manage. 
 
-The layering logical functional description for NF management function is in tabl
+The layering logical functional description for NF management function is in the following table.
 
 |Logical layer	|Functional description|
 |:-------- |:-----|
-|Data sharing layer	|	Provide northbound interface for management systems to query NF data. <br>	Provide northbound interface for management systems to query NF microservice topology. <br>	Provide northbound interface for management systems to manage a specific NF. <br> Provide northbound interface for management systems to un-manage a managed NF.|
-|Processing layer	|	Accept query command from data sharing layer, check database, and respond filtered data. <br>	Accept manage and un-manage command from data sharing layer, update NF management status in database, and record management system information.|
-|Agent layer	|	Recollecting the newest NF data and NF microservice topology info after being managed by upper layer management system.|
+|Data sharing layer	|	Provide northbound interface for upper layer management systems to query NF data. <br>	Provide northbound interface for upper layer management systems to query NF microservice topology. <br>	Provide northbound interface for management systems to manage a specific NF. <br> Provide northbound interface for management systems to un-manage a managed NF.|
+|Processing layer	|	Accept query command from data sharing layer, check database, and respond with filtered data. <br>	Accept manage and un-manage command from data sharing layer, update NF management status in database, and record information of upper layer management system.|
+|Agent layer	|	Refresh NF data through southbound interface after NF being managed by upper layer management system.|
 
 ### Network function heartbeat management
 
-Once NF registered to cloud native OAM, it will report heartbeat to ensure it’s healthy. NF heartbeat management function tracks the heartbeat of NF and report alarms once heartbeat is abnormal.
+Once NF registered to cloud native OAM, it will report heartbeat to ensure it is healthy. NF heartbeat management function tracks the heartbeat of NF and report alarms once heartbeat is abnormal.
 
-The layering logical functional description for NF heartbeat management function is in table.
+The layering logical functional description for NF heartbeat management function is in the following table.
 
 |Logical layer	|Functional description|
 |:-------- |:-----|
 |Data sharing layer	| N/A |
-|Processing layer	|	Track heartbeat collected by agent layer, diagnose the NF status based on pre-defined rules (which defines what types of heartbeat indicates unhealthy NF), and store the NF status in databased with its diagnosing time.<br> When the heartbeat is abnormal and NF is diagnosed as unhealthy, generate alarm.|
-|Agent layer |	Collect heartbeat of NF|
+|Processing layer	|	Track heartbeat collected by agent layer, diagnose the NF status based on pre-defined rules (which defines what types of heartbeat indicates unhealthy NF), and store the NF status in databased with its diagnosing time.<br> When the heartbeat is abnormal, set NF status to unhealthy and generate alarm.|
+|Agent layer |	Collect heartbeat of NF.|
 
 ### Network function configuration management
 
-NF configuration management function manages the configurations of NF and is often used by upper layer management systems to configure NF. It supports synchronizing the under-use configuration from NF, storing multiple versions of configuration, and support upper layer management systems to deliver, query, and update NF configurations.
+NF configuration management function manages the configurations of NF and is often used by upper layer management systems to configure NF. It supports storing multiple versions of configuration, and support upper layer management systems to deliver, query, and update NF configurations.
 
-The layering logical functional description for NF configuration management function is in table.
+The layering logical functional description for NF configuration management function is in the following table.
 
 |Logical layer	|Functional description|
 |:-------- |:-----|
-|Data sharing layer|	Provide northbound interface for management systems to query configuration information of selected NF.<br>Provide northbound interface for management system to synchronize configuration details.<br>Provide northbound interface for management system to send configuration to NF and configure NF.<br>Provide northbound interface for management systems to select historical configuration and update NF configuration. (rollback)|
+|Data sharing layer|	Provide northbound interface for upper layer management systems to query configuration information of selected NF.<br>Provide northbound interface for upper layer management system to synchronize configuration details.<br>Provide northbound interface for upper layer management system to send configuration files to NF and configure NF.<br>Provide northbound interface for upper layer management systems to select one historical version of configuration and set NF configuration to that version. (rollback)|
 |Processing layer	|	Maintain configuration operations and configuration files.|
 |Agent layer	|	Collect configuration from NF.<br>Send configuration to NF and track its execution outcomes.|
 
@@ -92,11 +92,9 @@ Under design. To be updated in future release.
 
 ### Network function performance management
 
-NF performance management function supports to collect performance data from NF, store the data, and support upper layer management system to subscribe performance data from cloud native OAM. 
+NF performance management function supports to collect performance data from NF, store performance data, and support upper layer management system to subscribe performance data from cloud native OAM. As Prometheus is one of the most commonly used metrics collection software, NF performance management function selects Prometheus as the performance metrics management backend.
 
-As Prometheus is one of the most commonly used metrics collection software, NF performance management function selects Prometheus as the performance metrics backend.
-
-The layering logical functional description for NF performance management function is in table.
+The layering logical functional description for NF performance management function is in the following table.
 
 |Logical layer	|Functional description|
 |:-------- |:-----|
@@ -105,8 +103,8 @@ The layering logical functional description for NF performance management functi
 |Agent layer	|	Exporter for NF business performance data collection.|
 
 ### Network function alarm management
-NF alarm management function collects NF alarms, process the collected alarms (e.g. remove duplicated alarms), store alarms and support upper layer management system to subscribe target NF’s alarm.
-The layering logical functional description for NF alarm management function is in table.
+NF alarm management function collects NF alarms, process the collected alarms (e.g. remove duplicated alarms), store alarms data and support upper layer management system to subscribe target NF’s alarms.
+The layering logical functional description for NF alarm management function is in the following table.
 
 |Logical layer	|Functional description|
 |:-------- |:-----|
@@ -119,7 +117,15 @@ NF log management function collect NF logs, store them, and support upper layer 
 
 Filebeat, logstash, elastic search and Kikana are integrated to implement this function.
 
+### Additional functions to make cloud native OAM work
 
+#### Authentication and Authorization
+
+Cloud native OAM provides simple authentication and authorization function to issue token to upper layer management systems. It supports to verify whether an upper layer management system is a legal user. 
+
+#### Subscription
+
+Subscription function supports upper layer management systems to subscribe information from cloud native OAM. NF register notification, performance data, alarms are typical types of information to be subscribed.
 
 
 
